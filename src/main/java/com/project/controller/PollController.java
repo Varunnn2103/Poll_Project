@@ -1,11 +1,12 @@
 package com.project.controller;
 
+import com.project.Vote;
 import com.project.model.Poll;
 import com.project.service.PollService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/polls")
@@ -20,5 +21,22 @@ public class PollController {
     @PostMapping
     public Poll createPoll(@RequestBody Poll poll){
         return pollservice.createPoll(poll);
+    }
+
+    @GetMapping
+    public List<Poll> getAllPolls(){
+        return pollservice.getAllPolls();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Poll> getPollById(@PathVariable Long id){
+        return pollservice.getPollById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/vote")
+    public void vote(@RequestBody Vote vote){
+        pollservice.vote(vote.getPollId(), vote.getOptionIndex());
     }
 }
