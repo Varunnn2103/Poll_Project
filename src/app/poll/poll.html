@@ -1,0 +1,59 @@
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      
+      <div class="card shadow-sm border-0 mb-5">
+        <div class="card-header bg-primary text-white py-3">
+          <h4 class="mb-0 text-center fw-bold">🚀 Create a New Poll</h4>
+        </div>
+        <div class="card-body p-4">
+          <div class="mb-4">
+            <label class="form-label fw-bold">What's your question?</label>
+            <input [(ngModel)]="newPoll.question" class="form-control form-control-lg border-primary-subtle" placeholder="What is your favorite tech?">
+          </div>
+
+          <label class="form-label fw-bold">Options</label>
+          <div class="options-container">
+            <div *ngFor="let option of newPoll.options; let i = index; trackBy: trackByIndex" class="input-group mb-3">
+              <span class="input-group-text bg-light text-muted">{{ i + 1 }}</span>
+              <input [(ngModel)]="option.voteOption" placeholder="Enter option" class="form-control">
+              <button *ngIf="newPoll.options.length > 2" class="btn btn-outline-danger" (click)="newPoll.options.splice(i,1)">Remove
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="d-flex gap-2 mt-4">
+            <button (click)="addOption()" class="btn btn-outline-primary rounded-pill px-4">+ Add Option</button>
+            <button (click)="createPoll()" class="btn btn-primary rounded-pill px-4 flex-grow-1 shadow-sm">Publish Poll</button>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="text-center mb-4 fw-bold text-secondary">Active Polls</h2>
+      
+      <div *ngFor="let poll of polls" class="card shadow-sm border-0 mb-4 overflow-hidden">
+        <div class="card-body">
+          <h5 class="card-title fw-bold mb-4">{{ poll.question }}</h5>
+          
+          <div class="d-grid gap-3">
+            <div *ngFor="let option of poll.options; let i = index">
+              <button (click)="vote(poll.id, i)" class="btn btn-white border w-100 text-start p-0 position-relative overflow-hidden shadow-sm">
+                <div class="p-3 position-relative" style="z-index: 2;">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="fw-bold">{{ option.voteOption }}</span>
+                    <span class="badge bg-primary">{{ option.voteCount }} votes</span>
+                  </div>
+                  <div class="progress" style="height: 6px;">
+                    <div class="progress-bar" role="progressbar" [style.width.%]="calculatePercentage(option.voteCount, poll.options)"></div>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
